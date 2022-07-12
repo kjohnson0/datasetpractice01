@@ -1,14 +1,12 @@
 library(ggplot2)
 
-traindata = read.csv("train.csv")
-testdata = read.csv("test.csv")
 pokedata = read.csv("Pokemon.csv")
 
 View(testdata)
 View(traindata)
 View(pokedata)
 
-ggplot(data = pokedata, mapping = aes(x = Type.1, y = Speed)) +
+ggplot(data = pokedata, mapping = aes(x = Type.1, y = Speed,  fill = "red")) +
   geom_violin() + 
   labs(x = "Primary Typing", title = "Pokemon Typing and Speed")
 
@@ -18,5 +16,18 @@ ggplot(data = pokedata, mapping = aes(x = Generation, y = Total)) +
 
 ggplot(data = pokedata, mapping = aes(x = Type.1, y = Type.2, color = Legendary)) + 
   geom_point()
+
+ggplot(data = pokedata, mapping = aes(x = Attack, y = Sp..Atk, color = Legendary)) + 
+  geom_point() +
+  labs(title = "Pokemon Attack and Special Attack") +
+  scale_x_continuous(breaks = seq(from = 0, to = 200))
+
+ggplot(data = pokedata, mapping = aes(x = Attack, y = Sp..Atk, color = Generation)) + 
+  geom_point() +
+  labs(title = "Pokemon Attack and Special Attack")
+
+ggplot(data = pokedata, mapping = aes(x = Type.1, y = Type.2, color = Total)) + 
+  geom_count() +
+  labs(title = "Concentraions of Pokemon Typing and Stats")
 
 ?pokedata
