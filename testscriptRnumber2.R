@@ -2,8 +2,6 @@ library(ggplot2)
 
 pokedata = read.csv("Pokemon.csv")
 
-View(testdata)
-View(traindata)
 View(pokedata)
 
 ggplot(data = pokedata, mapping = aes(x = Type.1, y = Speed,  fill = "red")) +
