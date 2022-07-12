@@ -1,0 +1,13 @@
+---
+title: "README"
+output: html_document
+date: '2022-07-12'
+---
+
+In README:
+
+* information about your project!
+* a description (1-2 sentences) about your dataset
+* your name somewhere
+
+This is a project by Kaelyn Johnson analyzing data on pokemon. It uses the pokemon dataset from [kaggle](https://www.kaggle.com/datasets/abcsds/pokemon).
