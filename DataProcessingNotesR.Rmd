@@ -1,0 +1,252 @@
+---
+title: "Data Processing Notes"
+output: html_document
+date: '2022-07-13'
+---
+## Intro to dplyr
+
+dplyr is an R package in the tidyverse. We can load the packae using
+```{r}
+
+# load required libraries
+library(dplyr)
+?dplyr
+
+library(ggplot2)
+
+#preview dataset
+head(starwars)
+
+```
+
+### filtering data
+
+we can filter data using 'filter()'
+
+```{r}
+
+filter(starwars, hair_color == "blond" | hair_color == "blonde")
+
+filter(starwars, hair_color == "blond", homeworld == "Tatooine")
+
+filtereddata = filter(starwars, hair_color == "blond", homeworld == "Tatooine", mass > 75, eye_color != "green")
+
+filter(starwars, hair_color %in% c("blond", "brown"))
+
+importantPlanets = c("Tatooine", "Naboo", "Hoth", "Alderaan")
+
+filter(starwars, homeworld %in% importantPlanets)
+
+filter(starwars, name < "Mace")
+
+```
+
+Tips:
+
+* Be sure to spell the category right!
+* R is case sensitive!
+* Use a "==" if necessary
+
+```{r}
+
+head(diamonds) # first six rows
+class(diamonds$cut) # specific type of data
+summary(diamonds$cut) # count of each category or quartiles if numeric
+filter(diamonds, price < 400)
+filter(diamonds, cut > "Very Good")
+
+unique(starwars$eye_color)
+
+#set an order through a vector, sets up a hierarchy
+factor(starwars$eye_color,
+       c("red", "orange", "gold", "yellow", "green", "blue", "black"),
+       ordered = TRUE)
+
+filter(starwars, height < 100, species != "Droid")
+
+filter(starwars, birth_year >= 100, birth_year <= 200)
+filter(starwars, between(birth_year, 100, 200))
+
+filter(starwars, mass > 100, height < 185)
+
+```
+### Missing values
+
+```{r}
+NA > 5 # it doesn't know (missing, unknown value)
+
+mass = NA
+mass == 10
+is.na(mass)
+
+x = 5
+is.na(x)
+
+NA != NA
+#because...
+Mary_Age = NA
+Paul_Age = NA
+Mary_Age == Paul_Age
+
+
+filter(starwars, mass!= 75 | is.na(mass), name < "Mace")
+
+filter(starwars, is.na(hair_color))
+
+```
+
+### Arranging data
+'arrange()' reodrers rows, it does not remove any rows.
+NA values always at the end of the order
+
+```{r}
+#lowest to highest birth year
+arrange(starwars, birth_year)
+
+# highest to lowest birth year
+arrange(starwars, desc(birth_year))
+
+arrange(starwars, name, hair_color, height)
+
+
+arrange(starwars, desc(height))
+arrange(starwars, height)
+
+arrange(starwars, name)
+
+arrange(starwars, desc(is.na(height)), desc(is.na(mass)), desc(is.na(hair_color)), desc(is.na(skin_color)), desc(is.na(eye_color)), desc(is.na(birth_year)))
+
+arrange(starwars, desc(is.na(starwars)))
+
+```
+
+```{r}
+#You can anonymize data
+
+select(starwars, mass, hair_color)
+
+select(starwars, hair_color:eye_color)
+
+select(starwars, -(hair_color:eye_color))
+select(starwars, -name)
+
+starwars_anon = select(starwars, -name)
+
+select(starwars, contains("_"))
+select(starwars, starts_with("s"), ends_with("color"))
+select(starwars, starts_with("s") & ends_with("color"))
+
+?select
+
+select(starwars, homeworld, species)
+
+select(starwars, hair_color, eye_color, skin_color, birth_year)
+select(starwars, ends_with("color"), birth_year)
+select(starwars, hair_color:birth_year)
+select(starwars, contains("_"))
+
+```
+
+```{r}
+
+starwars_small = select(starwars, height, mass, birth_year)
+head(starwars_small)
+
+#new column
+starwars_small = mutate(starwars_small, height_m = height/100)
+
+#alter existing column
+#non-reversible, to return to original data rerun initialization of starwars_small
+mutate(starwars_small, height = height/100)
+
+mutate(starwars_small, BMI = mass/(height_m^2))
+
+
+mutate(starwars_small, 
+       height_m = height/100, 
+       BMI = mass/(height_m^2))
+
+
+## aggregate functions, same number for all characters
+mutate(starwars_small, tot_mass = sum(mass, na.rm = TRUE))
+mutate(starwars_small, proportional_m = mass/sum(mass, na.rm = TRUE))
+
+```
+
+## summarizing and grouping data
+
+summarize() collapses a data frame/entire column to a single row
+
+```{r}
+
+mutate(starwars, mean_mass = mean(mass, na.rm = T))
+
+summarize(starwars, mean_mass = mean(mass, na.rm = T),
+          mean_height = mean(height, na.rm = T))
+
+mean(starwars$mass, na.rm = T)
+
+species_height = summarize(group_by(starwars, species), 
+          mean_height = mean(height, na.rm = T),
+          count = n())
+
+arrange(species_height, desc(count))
+
+# the pipe operator %>%
+# function(x, y) == x %>% function(y)
+# don't save as an object using pipes
+# when using dplyr functions, generally always start with a dataset
+
+starwars %>%
+  group_by(species) %>%
+  summarize(height_mean = mean(height, na.rm = T),
+            count = n()) %>%
+  arrange(desc(height_mean))
+
+```
+
+### Sampling a designated number of rows (random)
+
+sample_n() allows us to samplea random number of rows from out dataset
+
+```{r}
+
+sample_n(starwars, 10)
+
+nrow(starwars) #total number of rows (87)
+sample_frac(starwars, 0.1) #samples 10% of dataset (9)
+
+```
+
+Take a slice of our dataset using slice()
+
+```{r}
+
+starwars %>%
+  group_by(species) %>%
+  sample_n(1)
+
+slice(starwars, 50:60) #slice by index value (row number)
+
+slice_head(starwars, n = 10) #first 10 rows by index
+slice_tail(starwars, n = 10) #last 10 rows by index
+
+slice_min(starwars, order_by = mass, n = 10) #rows with lowest 10 masses
+
+# replaces instances of "-99" with "NA"
+# hero_data%Height = sub(-99, NA, hero_data$Height)
+
+```
+
+# subsetting data: filter/select/mutate/arrange/summarize/group_by/sample/slice
+# create a visualization using new subset
+
+grassTypes = filter(pokedata, Type.1 == "Grass" | Type.2 == "Grass", Attack > 80 | Sp..Atk > 80)
+arrange(grassTypes, desc(Total))
+
+nrow(grassTypes)
+
+ggplot(data = grassTypes, mapping = aes(x = Attack, y = Sp..Atk, color = Generation)) +
+  geom_point()
+
+

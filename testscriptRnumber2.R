@@ -2,6 +2,11 @@ library(ggplot2)
 
 pokedata = read.csv("Pokemon.csv")
 
+#can compress file so that you can upload to github
+#save R object as a file
+#do not write the "data/" part because I didn't make a data folder
+#saveRDS(pokedata, "data/pokedata_clean.RDS")
+
 View(pokedata)
 
 ggplot(data = pokedata, mapping = aes(x = Type.1, y = Speed,  fill = "red")) +
