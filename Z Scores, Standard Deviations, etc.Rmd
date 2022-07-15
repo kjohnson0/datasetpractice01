@@ -1,0 +1,42 @@
+---
+title: "Z Scores, etc."
+output: html_document
+date: '2022-07-14'
+---
+
+# 100 boxes of cookies, number per box is 38.2
+
+```{r}
+
+sample_mean = 38.2
+population_mean = 40 # what our null hypothesis is testing
+standardDeviation = 10
+n = 100 # sample size
+
+z = (sample_mean - population_mean) / (standardDeviation/sqrt(n))
+z
+
+```
+
+```{r}
+
+# null hypothesis
+# random sample mean == population mean (5.84333)
+
+# alternate hypothesis
+# random sample mean != population mean
+
+
+sepalMean = mean(iris$Sepal.Length)
+random_sample = sample_n(iris, 10)
+sepalRan = random_sample$Sepal.Length
+
+?t.test
+t.test(mu = sepalMean, x = sepalRan)
+
+setosa = filter(iris, Species == "setosa")
+setosaSep = setosa$Sepal.Length
+
+t.test(mu = sepalMean, x = setosaSep)
+
+```

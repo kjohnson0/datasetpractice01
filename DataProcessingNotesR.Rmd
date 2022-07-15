@@ -82,7 +82,7 @@ is.na(mass)
 x = 5
 is.na(x)
 
-NA != NA
+# NA != NA
 #because...
 Mary_Age = NA
 Paul_Age = NA
