@@ -1,4 +1,5 @@
 library(ggplot2)
+library(dplyr)
 
 pokedata = read.csv("Pokemon.csv")
 
@@ -34,3 +35,14 @@ ggplot(data = pokedata, mapping = aes(x = Type.1, y = Type.2, color = Total)) +
   labs(title = "Concentraions of Pokemon Typing and Stats")
 
 ?pokedata
+
+
+
+sixWaters = filter(pokedata, Type.1 == "Water" | Type.2 == "Water", Generation == 6)
+sixWaters = mutate(sixWaters, meanTotal = mean(Total))
+sixWaters = mutate(sixWaters, toMean = Total-meanTotal)
+
+sixWaters
+
+ggplot(data = sixWaters, mapping = aes(x = Name, y = Sp..Def, color = Total)) +
+  geom_point()
