@@ -44,5 +44,12 @@ sixWaters = mutate(sixWaters, toMean = Total-meanTotal)
 
 sixWaters
 
+summarize(sixWaters, meanAtk = mean(Attack),
+          meanSpA = mean(Sp..Atk),
+          meanDef = mean(Defense),
+          meanSpD = mean(Sp..Def),
+          meanHP = mean(HP),
+          meanSpe = mean(Speed))
+
 ggplot(data = sixWaters, mapping = aes(x = Name, y = Sp..Def, color = Total)) +
   geom_point()
