@@ -246,7 +246,11 @@ arrange(grassTypes, desc(Total))
 
 nrow(grassTypes)
 
-ggplot(data = grassTypes, mapping = aes(x = Attack, y = Sp..Atk, color = Generation)) +
-  geom_point()
+ggplot(data = grassTypes, mapping = aes(x = Generation, y = Sp..Atk, color = Legendary)) +
+  geom_point() +
+  labs(title = "Special Attack of Grass Types by Generation")
 
+ggplot(data = pokedata, mapping = aes(x = X., y = Total, color = Legendary)) +
+  geom_line()
+  
 
