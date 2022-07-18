@@ -53,3 +53,48 @@ summarize(sixWaters, meanAtk = mean(Attack),
 
 ggplot(data = sixWaters, mapping = aes(x = Name, y = Sp..Def, color = Total)) +
   geom_point()
+
+
+
+pop_mean = mean(iris$Sepal.Length)
+setosa = filter(iris, Species == "setosa")
+t.test(setosa$Sepal.Length,mu = pop_mean)
+
+pmean = mean(iris$Petal.Length)
+versicolor = filter(iris, Species == "versicolor")
+t.test(versicolor$Petal.Length, mu = pmean)
+
+
+setosa = filter(iris, Species == "setosa")
+versicolor = filter(iris, Species == "versicolor")
+
+t.test(versicolor$Sepal.Length, setosa$Sepal.Length)
+
+virginica = filter(iris, Species == "virginica")
+t.test(versicolor$Sepal.Length, virginica$Sepal.Length)
+
+install.packages("datarium")
+library(datarium)
+
+# alternative = less means is option1 less than option2
+t.test(mice2$before, mice2$after, paired = T, alternative = "less")
+
+# "a ~ b" means calculate mean of "a" for each "b"
+sepal_len_anova = aov(data = iris, Sepal.Length ~ Species)
+sepal_len_anova
+
+summary(sepal_len_anova)
+TukeyHSD(sepal_len_anova)
+
+sepal_width_anova = aov(data = iris, Sepal.Width ~ Species)
+
+summary(sepal_width_anova)
+TukeyHSD(sepal_width_anova)
+
+diamondPriceColor = aov(data = diamonds, price ~ color)
+summary(diamondPriceColor)
+
+signifResults = TukeyHSD(diamondPriceColor)
+# convert to dataframe so we can  use dplyr functions
+arrange(as.data.frame(signifResults), 'p adj')
+
