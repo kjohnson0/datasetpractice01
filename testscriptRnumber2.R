@@ -54,6 +54,12 @@ summarize(sixWaters, meanAtk = mean(Attack),
 ggplot(data = sixWaters, mapping = aes(x = Name, y = Sp..Def, color = Total)) +
   geom_point()
 
+totmean = mean(pokedata$Total)
+fires = filter(pokedata, Type.1 == "Fire" | Type.2 == "Fire")
+dragons = filter(pokedata, Type.1 == "Dragon" | Type.2 == "Dragon")
+
+t.test(dragons$Total, mu = totmean)
+t.test(fires$Total, dragons$Total)
 
 
 pop_mean = mean(iris$Sepal.Length)
