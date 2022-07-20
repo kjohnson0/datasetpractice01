@@ -104,3 +104,18 @@ signifResults = TukeyHSD(diamondPriceColor)
 # convert to dataframe so we can  use dplyr functions
 arrange(as.data.frame(signifResults), 'p adj')
 
+names(pokedata)
+summary(pokedata)
+glimpse(pokedata)
+
+pokeNumerics = select(pokedata, -Name, -Type.1, -Type.2, -X., -Legendary, -Generation)
+summary(pokeNumerics)
+pokeNumerics = scale(pokeNumerics)
+pokeClusters = kmeans(pokeNumerics, centers = 2)
+pokedata$cluster = pokeClusters$cluster
+
+ggplot(pokedata, aes(x = HP, y = Total)) + 
+  geom_point(aes(color = as.factor(cluster)))
+
+ggplot(pokedata, aes(x = HP, y = Total)) + 
+  geom_point(aes(color = Legendary))
